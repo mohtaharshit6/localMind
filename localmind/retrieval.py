@@ -12,23 +12,26 @@ from localmind.db import get_connection, init_db
 def _sanitize_fts_query(query: str) -> str:
     """
     Sanitize user input for FTS5.
-    FTS5 uses a specific query syntax; we make it safe.
+    Converts natural language queries into an FTS keyword search.
     """
-    # Remove FTS5 special characters that could break syntax
-    # Keep alphanumeric, spaces, hyphens
     clean = re.sub(r'["\*\(\)\[\]\{\}\^~\?:\\\/\|]', ' ', query)
-    # Collapse whitespace
     clean = ' '.join(clean.split())
     if not clean:
         return '""'
-    # Wrap each term; allow partial prefix matching
+        
     terms = clean.split()
-    # Use phrase search for multi-word, OR for single words
-    if len(terms) == 1:
-        return f'"{terms[0]}"*'
-    else:
-        # Try phrase first, fall back to OR
-        return f'"{clean}"'
+    
+    # Filter out common stop words to improve FTS matching
+    stop_words = {"a", "an", "the", "is", "are", "was", "were", "of", "in", "on", "at", 
+                  "to", "for", "with", "about", "me", "tell", "give", "i", "have", "what", 
+                  "how", "why", "can", "you", "summarize", "summary", "read"}
+    meaningful_terms = [t for t in terms if t.lower() not in stop_words]
+    
+    if not meaningful_terms:
+        meaningful_terms = terms
+        
+    # Search for documents containing ANY of the meaningful keywords
+    return " OR ".join([f'"{t}"*' for t in meaningful_terms])
 
 
 def search_fts(
