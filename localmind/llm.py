@@ -72,12 +72,7 @@ def answer_question(question: str, context_chunks: list[dict]) -> str:
     context_chunks: list of {content, filename, file_path, ...}
     """
     if not context_chunks:
-        try:
-            return generate(
-                f"Answer this question based on your knowledge (no local documents found):\n\n{question}"
-            )
-        except LLMUnavailableError:
-            return "No relevant documents found and no LLM is configured. Please index some files and/or configure your GEMINI_API_KEY."
+        return "I could not find any relevant information matching your question in your indexed local files. Please try rephrasing your search or ensure the relevant folder is connected and indexed."
 
     # Build context
     context_parts = []
@@ -87,18 +82,19 @@ def answer_question(question: str, context_chunks: list[dict]) -> str:
         )
     context = "\n\n---\n\n".join(context_parts)
 
-    prompt = f"""You are LocalMind, an AI assistant that answers questions based on the user's local files.
+    prompt = f"""You are LocalMind, a strict Local File Assistant. Your sole purpose is to answer questions based ONLY on the user's local files.
 
 Context from local files:
 {context}
 
 Question: {question}
 
-Instructions:
-- Answer based primarily on the provided context.
-- Cite sources by mentioning the filename.
-- If the context doesn't fully answer the question, say so clearly.
-- Be concise and helpful.
+STRICT INSTRUCTIONS:
+1. You MUST answer the question using ONLY the information provided in the Context above.
+2. DO NOT use your general pre-trained knowledge or outside information under any circumstances.
+3. If the Context above does not explicitly contain the answer, you MUST reply with: "I could not find the answer to this in your indexed local files."
+4. Always cite your sources by mentioning the exact [Source: filename] when providing facts.
+5. Be concise and direct.
 
 Answer:"""
 
