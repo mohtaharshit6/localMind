@@ -13,16 +13,25 @@ class LLMUnavailableError(Exception):
 def _get_gemini_model():
     """Initialize and return Gemini model."""
     import os
+    import streamlit as st
     from pathlib import Path
     from dotenv import load_dotenv
 
-    # Dynamically load .env so changes take effect without server restart
+    # Dynamically load .env so changes take effect without server restart (Local)
     _project_root = Path(config.__file__).parent
     load_dotenv(_project_root / ".env", override=True)
     
     api_key = os.getenv("GEMINI_API_KEY", "").strip()
+    
+    # Check Streamlit Cloud Secrets (Deployed)
     if not api_key:
-        raise LLMUnavailableError("GEMINI_API_KEY not set in environment.")
+        try:
+            api_key = st.secrets.get("GEMINI_API_KEY", "").strip()
+        except Exception:
+            pass
+
+    if not api_key:
+        raise LLMUnavailableError("GEMINI_API_KEY not set in environment or secrets.")
     
     try:
         import google.generativeai as genai
