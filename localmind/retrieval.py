@@ -14,7 +14,8 @@ def _sanitize_fts_query(query: str) -> str:
     Sanitize user input for FTS5.
     Converts natural language queries into an FTS keyword search.
     """
-    clean = re.sub(r'["\*\(\)\[\]\{\}\^~\?:\\\/\|]', ' ', query)
+    # Strip all non-alphanumeric characters to ensure pure keyword matching
+    clean = re.sub(r'[^\w\s]', ' ', query)
     clean = ' '.join(clean.split())
     if not clean:
         return '""'
