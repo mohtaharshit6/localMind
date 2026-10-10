@@ -1242,6 +1242,35 @@ with st.sidebar:
             else:
                 st.warning("Enter a folder path.")
 
+    with st.expander("+  Upload files (Cloud)"):
+        st.markdown(
+            "<div style='font-size: 11px; color: #8B949E; margin-bottom: 8px;'>"
+            "Upload files directly to the cloud server for analysis. Best for web links."
+            "</div>", unsafe_allow_html=True
+        )
+        uploaded_files = st.file_uploader("Select files", accept_multiple_files=True, label_visibility="collapsed")
+        
+        if st.button("Upload and Index", key="upload_btn", use_container_width=True):
+            if uploaded_files:
+                with st.spinner("Saving and indexing..."):
+                    from config import DATA_DIR
+                    upload_dir = DATA_DIR / "cloud_uploads"
+                    upload_dir.mkdir(parents=True, exist_ok=True)
+                    
+                    for f in uploaded_files:
+                        file_path = upload_dir / f.name
+                        file_path.write_bytes(f.read())
+                        
+                    ok, msg = authorize_folder(str(upload_dir))
+                    if ok:
+                        index_files(force_reindex=False)
+                        st.session_state.sidebar_msg = ("ok", f"Successfully uploaded and indexed {len(uploaded_files)} file(s).")
+                    else:
+                        st.session_state.sidebar_msg = ("err", msg)
+                st.rerun()
+            else:
+                st.warning("No files selected.")
+
     # Sidebar feedback message
     if st.session_state.sidebar_msg:
         kind, msg = st.session_state.sidebar_msg
