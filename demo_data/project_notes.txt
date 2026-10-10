@@ -1,0 +1,85 @@
+Project Overview: LocalMind Development Notes
+==============================================
+Project: LocalMind - AI Personal Assistant
+Status: MVP Development
+Team: Solo Developer
+Target: College Demo
+
+ARCHITECTURE DECISIONS
+------------------------
+After evaluating several options, we chose:
+
+1. SQLite FTS5 as the primary search engine
+   - Reason: Zero external dependencies, reliable, fast for local use
+   - BM25 ranking built-in since SQLite 3.x
+   - No server required, perfect for local-first architecture
+
+2. Google Gemini as LLM provider
+   - Reason: Strong performance, generous free tier
+   - Fallback: App works without API key for search/indexing
+   - Model: gemini-1.5-flash (fast, cost-effective)
+
+3. Streamlit for the UI
+   - Reason: Rapid development, Python-native
+   - Limitation: Not suitable for production-scale apps
+   - Benefit: Perfect for demos and MVPs
+
+DEVELOPMENT LOG
+----------------
+Week 1:
+  - Set up project structure
+  - Implemented file authorization module
+  - Basic PDF parsing with PyMuPDF
+  - SQLite database schema design
+
+Week 2:
+  - FTS5 indexing implementation
+  - DOCX parsing with python-docx
+  - CSV analysis with pandas
+  - Initial Streamlit UI
+
+Week 3:
+  - LLM integration (Gemini)
+  - Safe file operations module
+  - Action logging
+  - UI polish and demo preparation
+
+TECHNICAL CHALLENGES ENCOUNTERED
+----------------------------------
+1. FTS5 Query Sanitization
+   - Problem: User input could break FTS syntax
+   - Solution: Strip special characters, use phrase matching
+   - Result: Robust search without injection risks
+
+2. Large File Handling
+   - Problem: PDF files can be very large
+   - Solution: Chunking with overlap for context preservation
+   - Chunk size: 800 chars, 100 char overlap
+
+3. Path Security
+   - Problem: Prevent path traversal attacks
+   - Solution: Resolve all paths, check against whitelist
+   - Implementation: auth.py module with validate_destination()
+
+DEMO SCENARIOS PREPARED
+------------------------
+1. Search: "machine learning algorithms" → retrieves from ml_study_notes.txt
+2. Compare: ml_study_notes.txt vs project_notes.txt
+3. CSV: sales_data.csv → "What's the best performing region?"
+4. File Ops: Move .txt files to archive folder
+5. Summarize: Generate revision plan from study notes
+
+KNOWN LIMITATIONS
+-----------------
+- No real-time file watching (manual re-index required)
+- Vector embeddings not implemented (FTS5 is sufficient for MVP)
+- Large PDF files may take longer to parse
+- CSV analysis quality depends on LLM context window
+
+NEXT STEPS (Post-MVP)
+----------------------
+- Add ChromaDB vector retrieval for semantic search
+- Implement file watching for auto-reindex
+- Support for .pptx, .xlsx files
+- Multi-folder comparison reports
+- Export search results to PDF

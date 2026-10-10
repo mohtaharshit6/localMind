@@ -1,0 +1,97 @@
+LocalMind Research Notes - Machine Learning Fundamentals
+==========================================================
+Author: Demo Student
+Date: September 2026
+Course: CS 489 - Artificial Intelligence
+
+CHAPTER 1: INTRODUCTION TO MACHINE LEARNING
+--------------------------------------------
+Machine learning (ML) is a branch of artificial intelligence that enables systems to
+learn from data without being explicitly programmed. It focuses on developing algorithms
+that improve automatically through experience.
+
+Key Types of Machine Learning:
+1. Supervised Learning
+   - Training with labeled data
+   - Examples: Linear Regression, Decision Trees, Neural Networks
+   - Use case: Email spam detection, image classification
+
+2. Unsupervised Learning
+   - Finding patterns in unlabeled data
+   - Examples: K-Means Clustering, PCA, Autoencoders
+   - Use case: Customer segmentation, anomaly detection
+
+3. Reinforcement Learning
+   - Learning through reward and punishment
+   - Examples: Q-Learning, Policy Gradient Methods
+   - Use case: Game playing, robotics control
+
+CHAPTER 2: KEY ALGORITHMS
+---------------------------
+Linear Regression:
+  - Predicts continuous values
+  - Formula: y = mx + b (simple case)
+  - Optimization: Gradient Descent (minimize MSE)
+  - Good for: House price prediction, sales forecasting
+
+Logistic Regression:
+  - Classification algorithm (despite the name)
+  - Uses sigmoid function to output probabilities
+  - Binary or multi-class classification
+  - Good for: Medical diagnosis, credit scoring
+
+Decision Trees:
+  - Tree structure with decision nodes
+  - Uses Gini impurity or entropy for splits
+  - Prone to overfitting without pruning
+  - Random Forests use many trees (ensemble method)
+
+Neural Networks:
+  - Layers: Input → Hidden → Output
+  - Activation functions: ReLU, Sigmoid, Tanh
+  - Backpropagation for training
+  - Deep Learning uses many hidden layers
+
+CHAPTER 3: EVALUATION METRICS
+-------------------------------
+Classification:
+  - Accuracy = (TP + TN) / Total
+  - Precision = TP / (TP + FP)
+  - Recall = TP / (TP + FN)
+  - F1-Score = 2 * (Precision * Recall) / (Precision + Recall)
+  - ROC-AUC: Area under ROC curve
+
+Regression:
+  - MAE: Mean Absolute Error
+  - MSE: Mean Squared Error
+  - RMSE: Root Mean Squared Error
+  - R²: Coefficient of determination
+
+CHAPTER 4: IMPORTANT CONCEPTS
+-------------------------------
+Overfitting vs Underfitting:
+  - Overfitting: Model memorizes training data, fails on test data
+  - Underfitting: Model too simple, fails on both
+  - Solution: Cross-validation, regularization (L1/L2), dropout
+
+Feature Engineering:
+  - Normalization/Standardization
+  - One-hot encoding for categorical variables
+  - Feature selection: correlation analysis, PCA
+  - Handling missing values: imputation, deletion
+
+Train/Test Split:
+  - Typical: 80% train, 20% test
+  - Cross-validation: k-fold (k=5 or 10)
+  - Always stratify for imbalanced datasets
+
+EXAM TOPICS TO REVIEW:
+------------------------
+★ Gradient descent variants (SGD, Adam, RMSprop)
+★ Bias-variance tradeoff
+★ Regularization techniques
+★ CNN architecture for image tasks
+★ RNN/LSTM for sequential data
+★ Attention mechanism and Transformers
+★ Transfer learning
+★ Hyperparameter tuning strategies
