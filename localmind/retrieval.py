@@ -22,10 +22,9 @@ def _sanitize_fts_query(query: str) -> str:
         
     terms = clean.split()
     
-    # Filter out common stop words to improve FTS matching
+    # Filter out common grammatical stop words (kept minimal)
     stop_words = {"a", "an", "the", "is", "are", "was", "were", "of", "in", "on", "at", 
-                  "to", "for", "with", "about", "me", "tell", "give", "i", "have", "what", 
-                  "how", "why", "can", "you", "summarize", "summary", "read"}
+                  "to", "for", "with", "about", "i", "have", "what", "how", "why", "can", "you"}
     meaningful_terms = [t for t in terms if t.lower() not in stop_words]
     
     if not meaningful_terms:
@@ -60,7 +59,7 @@ def search_fts(
                 f.filename,
                 f.path as file_path,
                 f.extension,
-                bm25(chunks_fts) as score
+                bm25(chunks_fts, 1.0, 10.0, 1.0, 0.0) as score
             FROM chunks_fts
             JOIN chunks ON chunks.file_id = (
                 SELECT id FROM files WHERE path = chunks_fts.file_path LIMIT 1
